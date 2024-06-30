@@ -1,4 +1,4 @@
-import {cart} from '../data/cart.js';
+import {cart, addToCart} from '../data/cart.js';
 import {products} from '../data/products.js';
 let productsHTML = "";
 products.forEach(function(products){
@@ -53,31 +53,20 @@ products.forEach(function(products){
         </div>`;
 })
 let amazongird = document.querySelector(".js-products-grid").innerHTML = productsHTML;
-let addToCart = document.querySelectorAll(".js-add-to-cart");
-addToCart.forEach(function(button){
+
+
+function updateCartQuantity(){
+  let cartQuantity = 0;
+  cart.forEach(function(cartItems){
+    cartQuantity += cartItems.quantity;
+  })
+  document.querySelector(".js-cart-quantity").innerHTML = cartQuantity;
+}
+document.querySelectorAll(".js-add-to-cart").forEach(function(button){
   button.addEventListener("click", function(){
     const productId = button.dataset.productId;
-    let matchingItem;
-    cart.forEach(function(items){
-      if(productId === items.productId){
-        matchingItem = items;
-      }
-    });
-    if(matchingItem){
-      matchingItem.quantity += 1;
-    }else{
-      cart.push({
-        productId, //when we use key and value name same we donot need to specify key:value
-        quantity:1
-      });
-    }
-    
-    let cartQuantity = 0;
-    cart.forEach(function(items){
-      cartQuantity += items.quantity;
-    })
-
-    document.querySelector(".js-cart-quantity").innerHTML = cartQuantity;
+    addToCart(productId);
+    updateCartQuantity();
   })
 })
 
